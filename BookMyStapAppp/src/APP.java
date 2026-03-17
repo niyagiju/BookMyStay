@@ -1,3 +1,4 @@
+public class APP {
 /**
  * Main Application
  * Use Case 6: Reservation Confirmation & Room Allocation
@@ -22,5 +23,38 @@ public class APP{
         // Booking Service
         BookingService bs=new BookingService();
         bs.process(q,inv);
+        BookingQueue bq=new BookingQueue();
+
+        // Static availability variables
+        int singleAvailable = 5;
+        int doubleAvailable = 3;
+        int suiteAvailable = 2;
+
+        // Polymorphism
+        Room r1 = new SingleRoom();
+        Room r2 = new DoubleRoom();
+        Room r3 = new SuiteRoom();
+        // Guests submit booking requests
+        bq.addRequest(new Reservation("Alice","Single Room"));
+        bq.addRequest(new Reservation("Bob","Suite Room"));
+        bq.addRequest(new Reservation("Charlie","Double Room"));
+
+        // Show queue (arrival order preserved)
+        bq.showQueue();
+
+        // Demonstrate FIFO processing
+        System.out.println("\nProcessing next request...");
+        Reservation r=bq.getNext();
+
+        if(r!=null){
+            System.out.println("Processing:");
+            r.show();
+        }
+
+        r3.displayDetails();
+        System.out.println("Available: "+suiteAvailable);
+        System.out.println();
+        // Remaining queue
+        bq.showQueue();
     }
 }
