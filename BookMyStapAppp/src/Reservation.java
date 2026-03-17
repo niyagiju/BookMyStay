@@ -1,5 +1,5 @@
 /**
- * Represents a booking request made by a guest
+ * Represents a booking request
  */
 public class Reservation{
 
@@ -17,9 +17,5 @@ public class Reservation{
 
     public String getRoomType(){
         return roomType;
-    }
-
-    public void display(){
-        System.out.println("Guest: "+guestName+" | Requested: "+roomType);
     }
 }
