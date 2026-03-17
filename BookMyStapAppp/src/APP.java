@@ -1,3 +1,4 @@
+public class APP {
 /**
  * Use Case 5: Booking Request (First-Come-First-Served)
  * Demonstrates Queue for handling booking requests.
@@ -55,6 +56,15 @@ public class APP{
 
         BookingQueue bq=new BookingQueue();
 
+        // Static availability variables
+        int singleAvailable = 5;
+        int doubleAvailable = 3;
+        int suiteAvailable = 2;
+
+        // Polymorphism
+        Room r1 = new SingleRoom();
+        Room r2 = new DoubleRoom();
+        Room r3 = new SuiteRoom();
         // Guests submit booking requests
         bq.addRequest(new Reservation("Alice","Single Room"));
         bq.addRequest(new Reservation("Bob","Suite Room"));
@@ -72,6 +82,9 @@ public class APP{
             r.show();
         }
 
+        r3.displayDetails();
+        System.out.println("Available: "+suiteAvailable);
+        System.out.println();
         // Remaining queue
         bq.showQueue();
     }
