@@ -1,59 +1,28 @@
 public class APP {
 /**
- * Use Case 5: Booking Request (First-Come-First-Served)
- * Demonstrates Queue for handling booking requests.
- *
- * @author ni
- * @version 1.0
+ * Main Application
+ * Use Case 6: Reservation Confirmation & Room Allocation
  */
 
-import java.util.*;
-
-// ----------- Reservation (Request Object) -----------
-class Reservation{
-    String guestName;
-    String roomType;
-
-    public Reservation(String guestName,String roomType){
-        this.guestName=guestName;
-        this.roomType=roomType;
-    }
-
-    public void show(){
-        System.out.println("Guest: "+guestName+" | Requested: "+roomType);
-    }
-}
-
-// ----------- Booking Queue -----------
-class BookingQueue{
-
-    private Queue<Reservation> queue=new LinkedList<>();
-
-    // Add request (enqueue)
-    public void addRequest(Reservation r){
-        queue.add(r);
-        System.out.println("Request added for "+r.guestName);
-    }
-
-    // View all requests (without removing)
-    public void showQueue(){
-        System.out.println("\n===== Booking Request Queue =====");
-        for(Reservation r:queue){
-            r.show();
-        }
-    }
-
-    // Process next request (dequeue)
-    public Reservation getNext(){
-        return queue.poll(); // removes in FIFO order
-    }
-}
-
-// ----------- Main Application -----------
 public class APP{
 
     public static void main(String[] args){
 
+        // Inventory setup
+        RoomInventory inv=new RoomInventory();
+        inv.addRoom("Single Room",2);
+        inv.addRoom("Double Room",1);
+
+        // Queue setup
+        BookingQueue q=new BookingQueue();
+        q.addRequest(new Reservation("Alice","Single Room"));
+        q.addRequest(new Reservation("Bob","Single Room"));
+        q.addRequest(new Reservation("Charlie","Single Room")); // extra request
+        q.addRequest(new Reservation("David","Double Room"));
+
+        // Booking Service
+        BookingService bs=new BookingService();
+        bs.process(q,inv);
         BookingQueue bq=new BookingQueue();
 
         // Static availability variables
