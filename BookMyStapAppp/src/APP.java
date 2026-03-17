@@ -1,6 +1,6 @@
 /**
- * Use Case 4: Room Search & Availability Check
- * Demonstrates read-only search using inventory.
+ * Use Case 5: Booking Request (First-Come-First-Served)
+ * Demonstrates Queue for handling booking requests.
  *
  * @author ni
  * @version 1.0
@@ -8,92 +8,71 @@
 
 import java.util.*;
 
-// ----------- Room (Domain Model) -----------
-abstract class Room{
-    String type;
-    double price;
+// ----------- Reservation (Request Object) -----------
+class Reservation{
+    String guestName;
+    String roomType;
 
-    public Room(String type,double price){
-        this.type=type;
-        this.price=price;
+    public Reservation(String guestName,String roomType){
+        this.guestName=guestName;
+        this.roomType=roomType;
     }
 
     public void show(){
-        System.out.println("Room: "+type+" | Price: $"+price);
+        System.out.println("Guest: "+guestName+" | Requested: "+roomType);
     }
 }
 
-class SingleRoom extends Room{
-    public SingleRoom(){
-        super("Single Room",100);
-    }
-}
+// ----------- Booking Queue -----------
+class BookingQueue{
 
-class DoubleRoom extends Room{
-    public DoubleRoom(){
-        super("Double Room",180);
-    }
-}
+    private Queue<Reservation> queue=new LinkedList<>();
 
-class SuiteRoom extends Room{
-    public SuiteRoom(){
-        super("Suite Room",300);
-    }
-}
-
-// ----------- Inventory (State Holder) -----------
-class RoomInventory{
-    private HashMap<String,Integer> map=new HashMap<>();
-
-    public void add(String type,int count){
-        map.put(type,count);
+    // Add request (enqueue)
+    public void addRequest(Reservation r){
+        queue.add(r);
+        System.out.println("Request added for "+r.guestName);
     }
 
-    // READ-ONLY ACCESS
-    public int get(String type){
-        return map.getOrDefault(type,0);
-    }
-}
-
-// ----------- Search Service -----------
-class SearchService{
-
-    public void search(RoomInventory inv,List<Room> rooms){
-
-        System.out.println("===== Available Rooms =====");
-
-        for(Room r:rooms){
-            int available=inv.get(r.type);
-
-            // Validation (Defensive Programming)
-            if(available>0){
-                r.show();
-                System.out.println("Available: "+available);
-                System.out.println();
-            }
+    // View all requests (without removing)
+    public void showQueue(){
+        System.out.println("\n===== Booking Request Queue =====");
+        for(Reservation r:queue){
+            r.show();
         }
     }
+
+    // Process next request (dequeue)
+    public Reservation getNext(){
+        return queue.poll(); // removes in FIFO order
+    }
 }
 
-// ----------- Main -----------
+// ----------- Main Application -----------
 public class APP{
 
     public static void main(String[] args){
 
-        // Inventory setup
-        RoomInventory inv=new RoomInventory();
-        inv.add("Single Room",5);
-        inv.add("Double Room",0);
-        inv.add("Suite Room",2);
+        BookingQueue bq=new BookingQueue();
 
-        // Room objects
-        List<Room> rooms=new ArrayList<>();
-        rooms.add(new SingleRoom());
-        rooms.add(new DoubleRoom());
-        rooms.add(new SuiteRoom());
+        // Guests submit booking requests
+        bq.addRequest(new Reservation("Alice","Single Room"));
+        bq.addRequest(new Reservation("Bob","Suite Room"));
+        bq.addRequest(new Reservation("Charlie","Double Room"));
 
-        // Search (read-only)
-        SearchService s=new SearchService();
-        s.search(inv,rooms);
+        // Show queue (arrival order preserved)
+        bq.showQueue();
+
+        // Demonstrate FIFO processing
+        System.out.println("\nProcessing next request...");
+        Reservation r=bq.getNext();
+
+        if(r!=null){
+            System.out.println("Processing:");
+            r.show();
+        }
+
+        // Remaining queue
+        bq.showQueue();
     }
 }
