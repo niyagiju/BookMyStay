@@ -8,11 +8,19 @@ public class RoomInventory{
         map.put(type,count);
     }
 
-    public int getAvailability(String type){
-        return map.getOrDefault(type,0);
+    // synchronized ensures thread-safe updates
+    public synchronized boolean allocateRoom(String type){
+
+        int available=map.getOrDefault(type,0);
+
+        if(available>0){
+            map.put(type,available-1);
+            return true;
+        }
+        return false;
     }
 
-    public void increase(String type){
-        map.put(type,map.get(type)+1);
+    public int getAvailability(String type){
+        return map.getOrDefault(type,0);
     }
 }

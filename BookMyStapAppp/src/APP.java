@@ -1,40 +1,33 @@
 /**
  * Main Application
- * Use Case 10: Booking Cancellation & Inventory Rollback
+ * Use Case 11: Concurrent Booking Simulation
  */
 
 public class APP{
 
     public static void main(String[] args){
 
-        // Setup inventory
-        RoomInventory inv=new RoomInventory();
-        inv.addRoom("Single Room",1);
+        // Shared resources
+        BookingQueue queue=new BookingQueue();
+        RoomInventory inventory=new RoomInventory();
 
-        // Setup history (confirmed bookings)
-        BookingHistory history=new BookingHistory();
+        // Setup inventory (limited rooms)
+        inventory.addRoom("Single Room",2);
 
-        Reservation r1=new Reservation("R1","Single Room");
-        Reservation r2=new Reservation("R2","Single Room");
+        // Simulate multiple guest requests
+        queue.addRequest(new Reservation("Alice","Single Room"));
+        queue.addRequest(new Reservation("Bob","Single Room"));
+        queue.addRequest(new Reservation("Charlie","Single Room"));
+        queue.addRequest(new Reservation("David","Single Room"));
 
-        history.add(r1);
-        history.add(r2);
+        // Multiple threads (concurrent users)
+        BookingProcessor t1=new BookingProcessor(queue,inventory);
+        BookingProcessor t2=new BookingProcessor(queue,inventory);
 
-        CancellationService cs=new CancellationService();
+        t1.setName("Thread-1");
+        t2.setName("Thread-2");
 
-        // Valid cancellation
-        cs.cancel("R1",history,inv);
-
-        // Duplicate cancellation
-        cs.cancel("R1",history,inv);
-
-        // Invalid ID
-        cs.cancel("R3",history,inv);
-
-        // Check rollback stack
-        cs.showRollbackStack();
-
-        // Check inventory
-        System.out.println("Available Single Rooms: "+inv.getAvailability("Single Room"));
+        t1.start();
+        t2.start();
     }
 }
