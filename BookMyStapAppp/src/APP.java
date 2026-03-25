@@ -1,27 +1,32 @@
 public class APP {
 /**
  * Main Application
- * Use Case 8: Booking History & Reporting
+ * Use Case 9: Error Handling & Validation
  */
 
 public class APP{
 
     public static void main(String[] args){
 
-        BookingHistory history=new BookingHistory();
+        RoomInventory inv=new RoomInventory();
 
-        // Simulating confirmed bookings (from Use Case 6)
-        history.add(new Reservation("R1","Alice","Single Room"));
-        history.add(new Reservation("R2","Bob","Double Room"));
-        history.add(new Reservation("R3","Charlie","Single Room"));
-        history.add(new Reservation("R4","David","Suite Room"));
+        // Setup inventory
+        inv.addRoom("Single Room",1);
+        inv.addRoom("Double Room",0);
 
-        // Display history
-        history.display();
+        BookingService bs=new BookingService();
 
-        // Reporting
-        BookingReportService report=new BookingReportService();
+        // Valid booking
+        bs.process(new Reservation("Alice","Single Room"),inv);
 
+        // Invalid room type
+        bs.process(new Reservation("Bob","Luxury Room"),inv);
+
+        // No availability
+        bs.process(new Reservation("Charlie","Double Room"),inv);
+
+        // Empty guest name
+        bs.process(new Reservation("","Single Room"),inv);
         report.totalBookings(history);
         report.bookingsByRoomType(history);
         report.fullReport(history);
