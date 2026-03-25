@@ -1,26 +1,28 @@
 /**
  * Main Application
- * Use Case 6: Reservation Confirmation & Room Allocation
+ * Use Case 7: Add-On Service Selection
  */
 
 public class APP{
 
     public static void main(String[] args){
 
-        // Inventory setup
-        RoomInventory inv=new RoomInventory();
-        inv.addRoom("Single Room",2);
-        inv.addRoom("Double Room",1);
+        // Assume reservation already created in Use Case 6
+        String reservationId="Single_Room_1";
 
-        // Queue setup
-        BookingQueue q=new BookingQueue();
-        q.addRequest(new Reservation("Alice","Single Room"));
-        q.addRequest(new Reservation("Bob","Single Room"));
-        q.addRequest(new Reservation("Charlie","Single Room")); // extra request
-        q.addRequest(new Reservation("David","Double Room"));
+        AddOnServiceManager manager=new AddOnServiceManager();
 
-        // Booking Service
-        BookingService bs=new BookingService();
-        bs.process(q,inv);
+        // Guest selects services
+        manager.addService(reservationId,new AddOnService("Breakfast",20));
+        manager.addService(reservationId,new AddOnService("WiFi",10));
+        manager.addService(reservationId,new AddOnService("Airport Pickup",50));
+
+        // Display selected services
+        manager.displayServices(reservationId);
+
+        // Calculate total add-on cost
+        double total=manager.calculateTotalCost(reservationId);
+
+        System.out.println("\nTotal Add-On Cost: $"+total);
     }
 }
