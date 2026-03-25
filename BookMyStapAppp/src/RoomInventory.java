@@ -1,6 +1,9 @@
+import java.io.Serializable;
 import java.util.*;
 
-public class RoomInventory{
+public class RoomInventory implements Serializable{
+
+    private static final long serialVersionUID=1L;
 
     private HashMap<String,Integer> map=new HashMap<>();
 
@@ -8,19 +11,19 @@ public class RoomInventory{
         map.put(type,count);
     }
 
-    // synchronized ensures thread-safe updates
-    public synchronized boolean allocateRoom(String type){
-
-        int available=map.getOrDefault(type,0);
-
-        if(available>0){
-            map.put(type,available-1);
-            return true;
-        }
-        return false;
+    public void allocate(String type){
+        map.put(type,map.get(type)-1);
     }
 
-    public int getAvailability(String type){
-        return map.getOrDefault(type,0);
+    public HashMap<String,Integer> getData(){
+        return map;
+    }
+
+    public void setData(HashMap<String,Integer> data){
+        map=data;
+    }
+
+    public void show(){
+        System.out.println("Inventory: "+map);
     }
 }
