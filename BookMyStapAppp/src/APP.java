@@ -1,26 +1,30 @@
 public class APP {
 /**
  * Main Application
- * Use Case 7: Add-On Service Selection
+ * Use Case 8: Booking History & Reporting
  */
 
 public class APP{
 
     public static void main(String[] args){
 
-        // Assume reservation already created in Use Case 6
-        String reservationId="Single_Room_1";
+        BookingHistory history=new BookingHistory();
 
-        AddOnServiceManager manager=new AddOnServiceManager();
+        // Simulating confirmed bookings (from Use Case 6)
+        history.add(new Reservation("R1","Alice","Single Room"));
+        history.add(new Reservation("R2","Bob","Double Room"));
+        history.add(new Reservation("R3","Charlie","Single Room"));
+        history.add(new Reservation("R4","David","Suite Room"));
 
-        // Guest selects services
-        manager.addService(reservationId,new AddOnService("Breakfast",20));
-        manager.addService(reservationId,new AddOnService("WiFi",10));
-        manager.addService(reservationId,new AddOnService("Airport Pickup",50));
+        // Display history
+        history.display();
 
-        // Display selected services
-        manager.displayServices(reservationId);
+        // Reporting
+        BookingReportService report=new BookingReportService();
 
+        report.totalBookings(history);
+        report.bookingsByRoomType(history);
+        report.fullReport(history);
         // Calculate total add-on cost
         double total=manager.calculateTotalCost(reservationId);
 
