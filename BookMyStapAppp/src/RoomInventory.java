@@ -8,21 +8,11 @@ public class RoomInventory{
         map.put(type,count);
     }
 
-    public boolean isValidRoomType(String type){
-        return map.containsKey(type);
-    }
-
     public int getAvailability(String type){
         return map.getOrDefault(type,0);
     }
 
-    public void decrease(String type) throws InvalidBookingException{
-        int available=getAvailability(type);
-
-        if(available<=0){
-            throw new InvalidBookingException("No rooms available for "+type);
-        }
-
-        map.put(type,available-1);
+    public void increase(String type){
+        map.put(type,map.get(type)+1);
     }
 }
