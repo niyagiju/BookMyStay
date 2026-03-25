@@ -1,33 +1,44 @@
 /**
- * Main Application
- * Use Case 11: Concurrent Booking Simulation
+ * Use Case 12: Persistence & Recovery
  */
 
 public class APP{
 
     public static void main(String[] args){
 
-        // Shared resources
-        BookingQueue queue=new BookingQueue();
-        RoomInventory inventory=new RoomInventory();
+        // Try loading previous state
+        SystemState state=PersistenceService.load();
 
-        // Setup inventory (limited rooms)
-        inventory.addRoom("Single Room",2);
+        RoomInventory inventory;
+        BookingHistory history;
 
-        // Simulate multiple guest requests
-        queue.addRequest(new Reservation("Alice","Single Room"));
-        queue.addRequest(new Reservation("Bob","Single Room"));
-        queue.addRequest(new Reservation("Charlie","Single Room"));
-        queue.addRequest(new Reservation("David","Single Room"));
+        if(state==null){
+            // Fresh start
+            inventory=new RoomInventory();
+            history=new BookingHistory();
 
-        // Multiple threads (concurrent users)
-        BookingProcessor t1=new BookingProcessor(queue,inventory);
-        BookingProcessor t2=new BookingProcessor(queue,inventory);
+            inventory.addRoom("Single Room",3);
 
-        t1.setName("Thread-1");
-        t2.setName("Thread-2");
+            System.out.println("New system initialized.\n");
+        }
+        else{
+            // Recovery
+            inventory=state.inventory;
+            history=state.history;
 
-        t1.start();
-        t2.start();
+            System.out.println("System recovered from file.\n");
+        }
+
+        // Simulate booking
+        Reservation r=new Reservation("R1","Single Room");
+        history.add(r);
+        inventory.allocate("Single Room");
+
+        // Show current state
+        inventory.show();
+        history.show();
+
+        // Save before shutdown
+        PersistenceService.save(new SystemState(inventory,history));
     }
 }

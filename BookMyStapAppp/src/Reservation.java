@@ -1,21 +1,26 @@
-/**
- * Represents a booking request
- */
-public class Reservation{
+import java.io.Serializable;
 
-    private String guestName;
+public class Reservation implements Serializable{
+
+    private static final long serialVersionUID=1L;
+
+    private String reservationId;
     private String roomType;
 
-    public Reservation(String guestName,String roomType){
-        this.guestName=guestName;
+    public Reservation(String reservationId,String roomType){
+        this.reservationId=reservationId;
         this.roomType=roomType;
     }
 
-    public String getGuestName(){
-        return guestName;
+    public String getReservationId(){
+        return reservationId;
     }
 
     public String getRoomType(){
         return roomType;
+    }
+
+    public String toString(){
+        return reservationId+" - "+roomType;
     }
 }
