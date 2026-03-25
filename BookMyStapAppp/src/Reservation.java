@@ -1,21 +1,31 @@
 /**
- * Booking request data
+ * Represents a confirmed reservation
  */
 public class Reservation{
 
-    private String guestName;
+    private String reservationId;
     private String roomType;
+    private boolean active;
 
-    public Reservation(String guestName,String roomType){
-        this.guestName=guestName;
+    public Reservation(String reservationId,String roomType){
+        this.reservationId=reservationId;
         this.roomType=roomType;
+        this.active=true;
     }
 
-    public String getGuestName(){
-        return guestName;
+    public String getReservationId(){
+        return reservationId;
     }
 
     public String getRoomType(){
         return roomType;
+    }
+
+    public boolean isActive(){
+        return active;
+    }
+
+    public void cancel(){
+        active=false;
     }
 }

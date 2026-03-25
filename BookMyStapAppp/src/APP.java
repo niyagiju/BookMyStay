@@ -1,30 +1,42 @@
 public class APP {
 /**
  * Main Application
- * Use Case 9: Error Handling & Validation
+ * Use Case 10: Booking Cancellation & Inventory Rollback
  */
 
 public class APP{
 
     public static void main(String[] args){
 
-        RoomInventory inv=new RoomInventory();
-
         // Setup inventory
+        RoomInventory inv=new RoomInventory();
         inv.addRoom("Single Room",1);
-        inv.addRoom("Double Room",0);
 
-        BookingService bs=new BookingService();
+        // Setup history (confirmed bookings)
+        BookingHistory history=new BookingHistory();
 
-        // Valid booking
-        bs.process(new Reservation("Alice","Single Room"),inv);
+        Reservation r1=new Reservation("R1","Single Room");
+        Reservation r2=new Reservation("R2","Single Room");
 
-        // Invalid room type
-        bs.process(new Reservation("Bob","Luxury Room"),inv);
+        history.add(r1);
+        history.add(r2);
 
-        // No availability
-        bs.process(new Reservation("Charlie","Double Room"),inv);
+        CancellationService cs=new CancellationService();
 
+        // Valid cancellation
+        cs.cancel("R1",history,inv);
+
+        // Duplicate cancellation
+        cs.cancel("R1",history,inv);
+
+        // Invalid ID
+        cs.cancel("R3",history,inv);
+
+        // Check rollback stack
+        cs.showRollbackStack();
+
+        // Check inventory
+        System.out.println("Available Single Rooms: "+inv.getAvailability("Single Room"));
         // Empty guest name
         bs.process(new Reservation("","Single Room"),inv);
         report.totalBookings(history);
